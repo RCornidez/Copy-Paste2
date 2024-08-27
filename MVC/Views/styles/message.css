@@ -1,0 +1,23 @@
+.message-wrapper {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+}
+
+.message {
+    border: solid #475569;
+    background-color: #f8fafc;
+    box-shadow: 2px 2px 5px #1e293b;
+    border-radius: 8px;
+    width: fit-content;
+    max-width: 75%;
+    margin: 5px;
+    padding: 5px 15px;
+    word-wrap: break-word; /* Ensure long words or URLs break to the next line */
+    overflow-wrap: break-word; /* Provide support for older browsers */
+    white-space: pre-wrap; /* Preserve spaces and line breaks */
+}
+
+.message p:hover {
+    cursor: pointer;
+}

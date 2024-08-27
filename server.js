@@ -1,55 +1,71 @@
-import os from 'os';
-import express from "express";
-import { createServer } from 'http';
+import express from 'express';
+import http from 'http';
 import path from 'path';
 import { fileURLToPath } from 'url';
-import cors from "cors";
+import 'dotenv/config'
 
-import {router as webpages} from './components/webpages.js';
-import { router as firestore } from "./components/firestore.js";
+import AuthService from './custom_modules/Auth.js';
+import JWT from './custom_modules/JWT.js';
+import WebSocketServer from './custom_modules/WebSocketServer.js';
+import RateLimiter from './custom_modules/RateLimit.js';
 
+import { getSplashPage, getCopyPastePage, getLoginPage } from './MVC/Controllers/webpageController.js';
+import { authenticateLogin } from './MVC/Controllers/authController.js';
+import { generateGetJWT, generatePostJWT } from './MVC/Controllers/jwtController.js';
+import { upgradeWebSocket } from './MVC/Controllers/webSocketController.js';
 
-//Initialize Application
+import backupDatabase from './utilities/backupDatabase.js';
+
 const app = express();
-const __dirname = path.dirname(fileURLToPath(import.meta.url));
-
-app.use(cors({ origin: "*" }));  // Set allowed URLs || "*" for no CORS restrictions
-app.use(express.static(path.join(__dirname, 'public')));
 app.use(express.json());
 
-// Define application port and ip address (this must also be set manually in /public/index.js as "url")
-const PORT = process.env.PORT || 3000;
-const IP = process.env.IP || '0.0.0.0';
+// Serve static files
+const __filename = fileURLToPath(import.meta.url); // Convert the current module's URL to a file path
+const __dirname = path.dirname(__filename); // Get the directory name of the current module
+app.use(express.static(path.join(__dirname, 'public','v2'))); // used to serve static file (HTML, CSS, JS)
 
-
-// Webpage routes
-app.use(webpages);
-
-// Firestore routes
-app.use(firestore)
-
-
-// Start server
-const server = createServer(app);
-server.listen(PORT, IP, () => {
-    displayNetworkInterfaces();
+// Setup Rate Limiting
+const rateLimiter = new RateLimiter({
+    windowMs: 60 * 1000, // 1 minute
+    max: 20, // Limit each IP to 20 requests per minute
 });
 
-// Helper function for displaying applications network interfaces
-function displayNetworkInterfaces() {
-    console.log("Server accessible at:")
-    if(process.env.IP == "127.0.0.1") {
-        console.log(`http://127.0.0.1:${PORT}`);
-    } else {
-    const interfaces = os.networkInterfaces();
-    for (const name of Object.keys(interfaces)) {
-        for (const iface of interfaces[name]) {
-            if ('IPv4' !== iface.family || iface.internal !== false) {
-                continue;
-            }
-            console.log(`http://${iface.address}:${PORT}`);
-        }
+// Rate limiting middleware
+app.use(rateLimiter.rateLimit());
+
+const server = http.createServer(app);
+const jwt = new JWT();
+
+// Initialize WebSocket Server
+const webSocketServer = new WebSocketServer(server, jwt);
+const wss = webSocketServer.wss;
+
+
+// Routes
+app.get('/', getSplashPage);
+app.get('/copy-paste', getCopyPastePage);
+app.get('/login', getLoginPage);
+app.get('/dashboard', AuthService.authenticateToken, (req, res) => {
+    try {
+        res.send('This serves the private authenticated admin dashboard');
+    } catch (error) {
+        console.error('Error serving dashboard: ', error);
+        res.status(500).json({ success: false, error: 'Internal server error' });
     }
-    console.log(`http://127.0.0.1:${PORT}`);
-    }
-}
+});
+app.post('/api/auth', authenticateLogin);
+app.get('/api/secure', (req, res) => generateGetJWT(req, res, jwt));
+app.post('/api/secure', (req, res) => generatePostJWT(req, res, jwt));
+app.get('/api/wss', (req, res) => upgradeWebSocket(req, res, wss));
+
+// Start the server
+const PORT = process.env.PORT;
+server.listen(PORT,'0.0.0.0', () => {
+    
+    console.log(`Server is running on http://localhost:${PORT}`);
+
+    // Schedule the database backup every hour (3600000 ms)
+    setInterval(() => {backupDatabase()}, 3600000);
+});
+
+

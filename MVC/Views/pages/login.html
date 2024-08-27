@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Copy/Paste 📋 Login</title>
+    <style>
+        body { font-family: Arial, sans-serif; }
+        .container { width: 300px; margin: auto; padding: 20px; }
+        .hidden { display: none; }
+        .error-message { margin-top: 10px; color: red; }
+    </style>
+</head>
+<body>
+    <div class="container" id="login-container">
+        <h2>Login</h2>
+        <form id="login-form">
+            <div>
+                <label for="username">Username:</label>
+                <input type="text" id="username" required>
+            </div>
+            <div>
+                <label for="password">Password:</label>
+                <input type="password" id="password" required>
+            </div>
+            <button type="submit">Login</button>
+        </form>
+        <p id="login-error" class="error-message hidden">Invalid username or password</p>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const redirectParam = new URLSearchParams(window.location.search);
+            const redirectUrl = redirectParam.get('redirect') || '/';
+            console.log(redirectUrl);
+
+            const loginForm = document.getElementById('login-form');
+            const loginError = document.getElementById('login-error');
+
+            loginForm.addEventListener('submit', async (e) => {
+                e.preventDefault();
+                console.log('Starting login process...');
+                loginError.classList.add('hidden');
+
+                const username = document.getElementById('username').value;
+                const password = document.getElementById('password').value;
+
+                try {
+                    console.log('Sending login request...');
+
+                    const response = await fetch('/api/auth', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ username, password })
+                    });
+
+                    console.log('Waiting for response...');
+                    const data = await response.json();
+
+                    if (data.success) {
+                        console.log('Login successful! Redirecting...');
+                        setTimeout(() => {console.log('Waiting 10 seconds');}, 10000)
+                        window.location.href = redirectUrl;
+                    } else {
+                        console.log('Login failed:', data.message || 'Invalid username or password');
+                        loginError.textContent = data.message || 'Invalid username or password';
+                        loginError.classList.remove('hidden');
+                    }
+                } catch (error) {
+                    console.error('Error during login:', error);
+                    loginError.textContent = 'An error occurred during login. Please try again.';
+                    loginError.classList.remove('hidden');
+                }
+            });
+        });
+    </script>
+</body>
+</html>

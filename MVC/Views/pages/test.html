@@ -1,0 +1,390 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>API Client</title>
+    <script>
+        class WebSocketClient {
+            constructor(serverUrl) {
+                this.serverUrl = serverUrl;
+                this.websocket = null;
+                this.isConnected = false;
+                this.peerJoined = false;
+                this.connectionPromise = this._connect();
+            }
+
+            _connect() {
+                return new Promise((resolve, reject) => {
+                    try {
+                        this.websocket = new WebSocket(this.serverUrl);
+
+                        this.websocket.onopen = () => {
+                            console.log('WebSocket connection established');
+                            this.isConnected = true;
+                            resolve();
+                        };
+
+                        this.websocket.onmessage = async (event) => {
+                            console.log('WebSocket message received:', event.data);
+                            const message = JSON.parse(event.data);
+                            await this._handleMessage(message);
+                        };
+
+                        this.websocket.onerror = (event) => {
+                            console.error('WebSocket error observed:', event);
+                            reject(event);
+                        };
+
+                        this.websocket.onclose = (event) => {
+                            console.log('WebSocket connection closed');
+                            this.isConnected = false;
+                        };
+                    } catch (error) {
+                        console.error('Exception occurred during WebSocket connection:', error);
+                        reject(error);
+                    }
+                });
+            }
+
+            async _handleMessage(message) {
+                console.log('Handling WebSocket message:', message);
+
+                switch (message.content.type) {
+                    case 'offer':
+                        console.log('Handling offer message');
+                        const answer = await pc.handleOffer(message.content.data);
+                        console.log('Sending answer:', answer);
+
+                        this.sendMessage({
+                            type: 'group-message',
+                            content: {
+                                type: 'answer',
+                                data: answer
+                            }
+                        });
+                        break;
+                    case 'answer':
+                        console.log('Handling answer message');
+                        await pc.handleAnswer(message.content.data);
+                        break;
+                    case 'candidate':
+                        console.log('Handling ICE candidate message');
+                        await pc.handleIceCandidate(message.content.data);
+                        break;
+                    case 'peer-joined':
+                        console.log('Peer joined message received');
+                        this.peerJoined = true;
+                        break;
+                    default:
+                        console.warn('Unhandled message type:', message.content.type);
+                        break;
+                }
+            }
+
+            async sendMessage(messageObject) {
+                await this.connectionPromise; // Ensure the connection is open
+                if (this.websocket.readyState === WebSocket.OPEN) {
+                    const message = JSON.stringify(messageObject);
+                    this.websocket.send(message);
+                    console.log('Sent message:', message);
+                } else {
+                    console.error('WebSocket connection is not open. Failed to send message:', messageObject);
+                }
+            }
+
+            close() {
+                if (this.websocket) {
+                    this.websocket.close();
+                    console.log('WebSocket connection closed explicitly');
+                }
+            }
+
+            getCookie(name) {
+                const value = `; ${document.cookie}`;
+                const parts = value.split(`; ${name}=`);
+                if (parts.length === 2) return parts.pop().split(';').shift();
+                return null;
+            }
+
+            clearCookies() {
+                document.cookie.split(";").forEach((c) => {
+                    document.cookie = c.trim().split("=")[0] + "=;expires=Thu, 01 Jan 1970 00:00:00 UTC;path=/";
+                });
+                console.log('Cookies cleared');
+            }
+        }
+
+        class WebRTCClient {
+            constructor() {
+                this.pc = new RTCPeerConnection();
+                this.dataChannel = null;
+                this.iceCandidates = [];
+                this.onIceCandidateCallback = null;
+
+                // Set up ICE candidate event handler
+                this.pc.onicecandidate = (event) => {
+                    if (event.candidate) {
+                        this.iceCandidates.push(event.candidate);
+                        console.log('ICE candidate collected:', event.candidate);
+                        if (this.onIceCandidateCallback) {
+                            this.onIceCandidateCallback(event.candidate);
+                        }
+                    }
+                };
+
+                // Set up data channel event handler
+                this.pc.ondatachannel = (event) => {
+                    console.log('Data channel created');
+                    this.dataChannel = event.channel;
+                    this.setupDataChannel();
+                };
+
+                // Log ICE connection state changes
+                this.pc.oniceconnectionstatechange = () => {
+                    console.log('ICE connection state:', this.pc.iceConnectionState);
+                };
+            }
+
+            async createOffer() {
+                try {
+                    // Create a data channel
+                    this.dataChannel = this.pc.createDataChannel('chat');
+                    this.setupDataChannel();
+                    console.log('Data channel created');
+
+                    const offer = await this.pc.createOffer();
+                    await this.pc.setLocalDescription(offer);
+                    console.log('Created offer:', offer);
+                    return offer;
+                } catch (error) {
+                    console.error('Error creating offer:', error);
+                    throw error;
+                }
+            }
+
+            async handleOffer(offer) {
+                try {
+                    console.log('Handling offer:', offer);
+                    await this.pc.setRemoteDescription(new RTCSessionDescription(offer));
+                    const answer = await this.pc.createAnswer();
+                    await this.pc.setLocalDescription(answer);
+                    console.log('Created answer:', answer);
+                    return answer;
+                } catch (error) {
+                    console.error('Error handling offer:', error);
+                    throw error;
+                }
+            }
+
+            async handleAnswer(answer) {
+                try {
+                    console.log('Handling answer:', answer);
+                    await this.pc.setRemoteDescription(new RTCSessionDescription(answer));
+                } catch (error) {
+                    console.error('Error handling answer:', error);
+                    throw error;
+                }
+            }
+
+            async handleIceCandidate(candidate) {
+                try {
+                    console.log('Handling ICE candidate:', candidate);
+                    await this.pc.addIceCandidate(new RTCIceCandidate(candidate));
+                } catch (error) {
+                    console.error('Error adding ICE candidate:', error);
+                    throw error;
+                }
+            }
+
+            setupDataChannel() {
+                this.dataChannel.onopen = () => {
+                    console.log('Data channel is open');
+                    wsClient.sendMessage({
+                        type: 'close-group',
+                        content: null
+                    })
+                };
+
+                this.dataChannel.onmessage = (event) => {
+                    console.log('Received message:', event.data);
+                    // Handle the received message here
+                };
+
+                this.dataChannel.onclose = () => {
+                    console.log('Data channel is closed');
+                };
+
+                this.dataChannel.onerror = (error) => {
+                    console.error('Data channel error:', error);
+                };
+            }
+
+            sendMessage(message) {
+                if (this.dataChannel && this.dataChannel.readyState === 'open') {
+                    this.dataChannel.send(message);
+                    console.log('Sent data channel message:', message);
+                } else {
+                    console.error('Data channel is not open. Failed to send message:', message);
+                }
+            }
+
+            setOnIceCandidateCallback(callback) {
+                this.onIceCandidateCallback = callback;
+            }
+        }
+
+        let wsClient;
+        let pc;
+
+        window.addEventListener('load', () => {
+            document.getElementById('sendButton').addEventListener('click', async () => {
+                const messageContent = document.getElementById('messageInput').value;
+                const messageType = document.querySelector('input[name="messageType"]:checked').value;
+                const messageObject = { type: messageType, content: messageContent };
+
+                console.log('Sending message:', messageObject);
+                await wsClient.sendMessage(messageObject);
+            });
+
+            document.getElementById('clearCookiesButton').addEventListener('click', () => {
+                wsClient.clearCookies();
+            });
+
+            document.getElementById('startStressTestButton').addEventListener('click', startStressTest);
+
+            window.addEventListener('beforeunload', () => {
+                wsClient.close();
+            });
+        });
+
+        async function getSecureToken() {
+            console.log('Requesting secure token...');
+            const response = await fetch('/api/secure');
+            const data = await response.json();
+            document.getElementById('content').innerText = `Group ID: ${data.group_id}`;
+            console.log('Received secure token:', data);
+
+            wsClient = new WebSocketClient('/api/wss');
+
+            await wsClient.connectionPromise; // Wait for the WebSocket connection to be established
+            console.log('WebSocket connection established, creating group...');
+            await wsClient.sendMessage({ type: 'create', content: data.group_id });
+
+            pc = new WebRTCClient();
+
+            pc.setOnIceCandidateCallback((candidate) => {
+                console.log('Sending ICE candidate:', candidate);
+                wsClient.sendMessage({
+                    type: 'group-message',
+                    content: {
+                        type: 'candidate',
+                        data: candidate
+                    }
+                });
+            });
+
+            await waitForPeerToJoin();
+
+            const offer = await pc.createOffer();
+            console.log('Sending offer:', offer);
+
+            await wsClient.sendMessage({
+                type: 'group-message',
+                content: {
+                    type: 'offer',
+                    data: offer
+                }
+            });
+        }
+
+        async function postSecureToken() {
+            const groupId = prompt('Enter Group ID:');
+            console.log('Posting secure token for group ID:', groupId);
+            const response = await fetch('/api/secure', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ group_id: groupId })
+            });
+            const data = await response.json();
+            document.getElementById('content').innerText = `Group ID: ${data.group_id}`;
+            console.log('Received response for secure token:', data);
+
+            wsClient = new WebSocketClient('/api/wss');
+
+            await wsClient.connectionPromise; // Wait for the WebSocket connection to be established
+            console.log('WebSocket connection established, joining group...');
+            await wsClient.sendMessage({ type: 'join', content: data.group_id });
+
+            pc = new WebRTCClient();
+        }
+
+        async function waitForPeerToJoin() {
+            console.log('Waiting for peer to join...');
+            while (!wsClient.peerJoined) {
+                await new Promise(resolve => setTimeout(resolve, 500)); // Wait for 100 ms before checking again
+            }
+            console.log('Peer has joined');
+        }
+
+        async function startStressTest() {
+            const numClients = document.getElementById('numClients').value;
+            const messageInterval = document.getElementById('messageInterval').value;
+
+            for (let i = 0; i < numClients; i++) {
+                
+                const response = await fetch('/api/secure');
+                const client = new WebSocketClient('/api/wss');
+                await client.connectionPromise;
+
+                console.log('Requesting secure token...');
+            
+                setInterval(() => {
+                    client.sendMessage({ type: 'stress-test-message', content: `Message from client ${i}` });
+                }, messageInterval);
+            }
+        }
+    </script>
+</head>
+<body>
+    <h1>API Client</h1>
+    <button onclick="getSecureToken()">Get Secure Token</button>
+    <button onclick="postSecureToken()">Post Secure Token</button>
+    <br><br>
+    <input type="text" id="messageInput" placeholder="Enter message here">
+    <br>
+    <label>
+        <input type="radio" name="messageType" value="create" checked>
+        Create Group
+    </label>
+    <label>
+        <input type="radio" name="messageType" value="join">
+        Join Group
+    </label>
+    <label>
+        <input type="radio" name="messageType" value="close-group">
+        Close Group
+    </label>
+    <label>
+        <input type="radio" name="messageType" value="group-message">
+        Group Message
+    </label>
+    <br>
+    <button id="sendButton">Send Message</button>
+    <button id="clearCookiesButton">Clear Cookies</button>
+    <div id="content"></div>
+
+    <h2>Stress Test</h2>
+    <div>
+        <label for="numClients">Number of Clients: </label>
+        <input type="number" id="numClients" value="10">
+    </div>
+    <div>
+        <label for="messageInterval">Message Interval (ms): </label>
+        <input type="number" id="messageInterval" value="1000">
+    </div>
+    <button id="startStressTestButton">Start Stress Test</button>
+</body>
+</html>

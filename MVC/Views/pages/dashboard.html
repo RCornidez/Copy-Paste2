@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Server Dashboard</title>
+    <style>
+        body { font-family: Arial, sans-serif; }
+        .container { width: 60%; margin: auto; padding: 20px; }
+        .resource-usage { display: flex; justify-content: space-between; text-align: center; }
+        .resource-usage div { width: 30%; }
+        .metric { margin: 10px 0; }
+        .metric-title { font-weight: bold; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Server Dashboard</h1>
+        <div class="resource-usage">
+            <div>
+                <h2>CPU</h2>
+                <div class="metric">
+                    <div id="cpuPercentage"></div>
+                    <div id="cpuApp"></div>
+                    <div id="cpuTotal"></div>
+                </div>
+            </div>
+            <div>
+                <h2>RAM</h2>
+                <div class="metric">
+                    <div id="ramPercentage"></div>
+                    <div id="ramApp"></div>
+                    <div id="ramTotal"></div>
+                </div>
+            </div>
+            <div>
+                <h2>DISK</h2>
+                <div class="metric">
+                    <div id="diskPercentage"></div>
+                    <div id="diskApp"></div>
+                    <div id="diskTotal"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const cpuPercentage = document.getElementById('cpuPercentage');
+        const cpuApp = document.getElementById('cpuApp');
+        const cpuTotal = document.getElementById('cpuTotal');
+
+        const ramPercentage = document.getElementById('ramPercentage');
+        const ramApp = document.getElementById('ramApp');
+        const ramTotal = document.getElementById('ramTotal');
+
+        const diskPercentage = document.getElementById('diskPercentage');
+        const diskApp = document.getElementById('diskApp');
+        const diskTotal = document.getElementById('diskTotal');
+
+        async function fetchData() {
+            const response = await fetch('/api/stats');
+            const data = await response.json();
+
+            cpuPercentage.innerHTML = `
+                ${data.cpuLoad.toFixed(2)}% (app/system full amount)
+            `;
+            cpuApp.innerHTML = `
+                ${data.nodeUsage.cpu.user} (app)
+            `;
+            cpuTotal.innerHTML = `
+                ${data.system.cpu.total} (full system amount)
+            `;
+
+            ramPercentage.innerHTML = `
+                ${((data.memoryUsage.total - data.memoryUsage.free) / data.memoryUsage.total * 100).toFixed(2)}% (app/system full amount)
+            `;
+            ramApp.innerHTML = `
+                ${formatBytes(data.nodeUsage.memory.heapUsed)} (app)
+            `;
+            ramTotal.innerHTML = `
+                ${formatBytes(data.memoryUsage.total)} (full system amount)
+            `;
+
+            diskPercentage.innerHTML = `
+                ${((data.diskUsage.total - data.diskUsage.free) / data.diskUsage.total * 100).toFixed(2)}% (app/system full amount)
+            `;
+            diskApp.innerHTML = `
+                ${formatBytes(data.diskUsage.used)} (app)
+            `;
+            diskTotal.innerHTML = `
+                ${formatBytes(data.diskUsage.total)} (full system amount)
+            `;
+        }
+
+        function formatBytes(bytes, decimals = 2) {
+            if (bytes === 0) return '0 Bytes';
+            const k = 1024;
+            const dm = decimals < 0 ? 0 : decimals;
+            const sizes = ['Bytes', 'KB', 'MB', 'GB', 'TB'];
+            const i = Math.floor(Math.log(bytes) / Math.log(k));
+            return parseFloat((bytes / Math.pow(k, i)).toFixed(dm)) + ' ' + sizes[i];
+        }
+
+        setInterval(fetchData, 1000);
+    </script>
+</body>
+</html>
