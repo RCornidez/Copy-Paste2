@@ -23,16 +23,16 @@ export default class RateLimiter {
 
             // Check if IP is allowed to bypass rate limiting
             if (await AllowedIPModel.isIPAllowed(ip)) {
-                return next(); // Skip rate limiting and blocking for allowed IPs
+                return next();
             }
 
             // Check if IP is blocked
             if (await BlockedIPModel.isIPBlocked(ip)) {
-                return res.status(403).json({ error: 'Access denied' }); // 403 for blocked IPs
+                return res.status(403).json({ error: 'Access denied' });
             }
 
             // Apply rate limiting
-            this.limiter(req, res, next); // Proceed to rate limiting
+            this.limiter(req, res, next);
         };
     }
 
@@ -42,7 +42,7 @@ export default class RateLimiter {
         if (!(await BlockedIPModel.isIPBlocked(ip))) {
             await BlockedIPModel.addIP(ip); // Add IP to blocked list
         }
-        res.status(429).json({ error: 'Rate limit exceeded' }); // 429 Rate limit exceeded
+        res.status(429).json({ error: 'Rate limit exceeded' });
     }
 
     // Check if the IP is allowed to bypass rate limiting

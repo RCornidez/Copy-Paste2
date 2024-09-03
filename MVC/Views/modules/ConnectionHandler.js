@@ -16,7 +16,7 @@ export class ConnectionHandler {
 
         this.nanoid = customAlphabet('0123456789', 4);
         this.uiHandler = new UIHandler();
-        this.connectionStatusElement = document.getElementById('connection-status');
+        this.connectionStatusElement = document.getElementById('message');
 
     }
 
@@ -27,7 +27,7 @@ export class ConnectionHandler {
             console.log('Requesting secure token...');
             const response = await fetch('/api/secure');
             const data = await response.json();
-            document.getElementById('session-id').innerText = `Session ID: ${data.group_id}`;
+            document.getElementById('session-id').innerText = `Space ID: ${data.group_id}`;
             console.log('Received secure token:', data);
 
             this.pc = new WebRTCClient();
@@ -126,7 +126,7 @@ export class ConnectionHandler {
     async _waitForPeerToJoin() {
         console.log('Waiting for peer to join...');
         while (!this.wsClient.peerJoined) {
-            await new Promise(resolve => setTimeout(resolve, 500)); // Wait before checking again
+            await new Promise(resolve => setTimeout(resolve, 500));
         }
         console.log('Peer has joined');
     }
@@ -161,7 +161,6 @@ export class ConnectionHandler {
                     return map;
                 }, {});
 
-                //this.createElementOnPeerSide(message);
                 this.sendAcknowledgment(message.messageId);
             } else if (message.type === 'ack') {
                 // Resolve the promise when acknowledgment is received
@@ -192,8 +191,8 @@ export class ConnectionHandler {
             console.log(`sending file ${file.id}`)
             const fileMessage = new FileMessage(fileMeta.fileId, file);
             fileMessage.send(this.pc.dataChannel);
-            const fileLinkElement = this.uiHandler.createFileLink(fileMeta);
-            document.getElementById('container').appendChild(fileLinkElement);
+            const fileLinkElement = this.uiHandler.createFileLink(fileMeta, 'outgoing');
+            
         });
     }
     
@@ -242,21 +241,23 @@ export class ConnectionHandler {
 
     handleFileChunk(chunk) {
         try {
-            
             const idLength = 5;
             const messageIdBuffer = chunk.slice(0, idLength);
             const fileChunk = chunk.slice(idLength);
-        
-            // Decode the file ID from the buffer
+    
             const textDecoder = new TextDecoder();
-            const fileId = textDecoder.decode(messageIdBuffer);
-        
-            // Validate and store the chunk
+            const fileId = textDecoder.decode(messageIdBuffer).trim();
+
+            console.log(fileId)
+            console.log(fileChunk)
+
             if (fileId && this.fileMetadata[fileId]) {
                 this.fileMetadata[fileId].chunks.push(fileChunk);
                 this.fileMetadata[fileId].receivedSize += fileChunk.byteLength;
-        
-                // Check if the entire file is received
+    
+                console.log(`Received chunk for fileId ${fileId}, chunk size: ${fileChunk.byteLength}`);
+                console.log(`FileId ${fileId} - Received Size: ${this.fileMetadata[fileId].receivedSize}, Expected Size: ${this.fileMetadata[fileId].size}`);
+    
                 if (this.fileMetadata[fileId].receivedSize === this.fileMetadata[fileId].size) {
                     this._assembleFile(fileId);
                 }
@@ -267,25 +268,34 @@ export class ConnectionHandler {
             console.error('Error handling file chunk:', e);
         }
     }
-
     
     
     _assembleFile(fileId) {
         const fileData = this.fileMetadata[fileId];
-        const fileLinkElement = this.uiHandler.createFileLink(fileData);
-        document.getElementById('container').appendChild(fileLinkElement); // Append to the container
-
-        // Clean up after the file is downloaded
-        fileLinkElement.addEventListener('click', () => {
-            setTimeout(() => {
-                URL.revokeObjectURL(fileLinkElement.href);
-                delete this.fileMetadata[fileId];
-            }, 100);
-        });
+    
+        // Create a link element to download the file
+        const fileLinkElement = this.uiHandler.createFileLink(fileData, 'incoming');
     }
+    
 
     updateConnectionStatus(status) {
-        this.connectionStatusElement.textContent = `Status: ${status}`;
+        let phrase;
+
+        switch (status) {
+            case 'connected':
+                phrase = "We're connected! 😁 Send something.."
+                break;
+            case 'connecting':
+                phrase = "Hold on, trying to connect!"
+                break;
+            case 'disconnected':
+                phrase = "Whoops, looks like we're disconnected 😞"
+                break;
+            default:
+                phrase = "Initializing.."
+                break;
+        }
+        this.connectionStatusElement.placeholder = phrase;
     }
 }
 

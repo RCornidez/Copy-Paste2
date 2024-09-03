@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Copy/Paste 📋</title>
+    <link rel="stylesheet" href="/quickstart.css">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap" rel="stylesheet">
+
+</head>
+<body>
+    <main>
+        <nav>
+            <button id="arrow" class="custom-button"><img src="/assets/arrowIcon.svg"/></button>
+            <button id="hamburger" class="custom-button"><img src="/assets/hamburgerMenuIcon.svg"/></button>
+        </nav>
+
+        <h1 id="title">Quickstart</h1>
+
+
+        <h2>Table of Contents</h2>
+        <ul class="section">
+            <li><a href="#create">Creating a Space</a></li>
+            <li><a href="#join">Joining a Space</a></li>
+            <li><a href="#exit">Exiting a Space</a></li>
+            <li><a href="#send-file">Sending file(s)</a></li>
+            <li><a href="#send-text">Sending text</a></li>
+            <li><a href="#access-file">Accessing files</a></li>
+            <li><a href="#access-text">Accessing files</a></li>
+        </ul>
+
+        <div class="section">
+            <h2 id="create">Creating a Space</h2>
+            <img src="/assets/create-space.png"/>
+            <p>Select the "Create a Space" button on the splash page. You will be redirected to a new Space where your will see your unique temporary Space ID. Input this Space ID in the peer device that you would like to share with.</p>
+        </div>
+
+        <div class="section">
+            <h2 id="join">Joining a Space</h2>
+            <img src="/assets/join-space.png"/>
+            <p>On the splash page input the Space ID recieved from creating a Space, then select the "Join" button. You will be redirected to the associated Space where you can immediately begin sharing files and text.</p>
+        </div>
+
+        <div class="section">
+            <h2 id="exit">Exiting a Space</h2>
+            <img src="/assets/exit-space.png"/>
+            <p>Within the Space page select the "Exit" button located on the top right side of the screen. You will be returned to the splash screen.</p>
+        </div>
+
+        <div class="section">
+            <h2 id="send-file">Sending file(s)</h2>
+            <img src="/assets/send-file.png"/>
+            <p>Within the Space page select the "Paperclip" button located on the bottom left side of the screen. Select one or more files to include in the message. Finally, select the "Arrow" Button on the bottom right side of the screen.</p>
+        </div>
+
+        <div class="section">
+            <h2 id="send-text">Sending text</h2>
+            <img src="/assets/send-text.png"/>
+            <p>Within the Space page select the text input located on the bottom center of the screen. Paste or type all of the text you would like to send. Finally, select the "Arrow" Button on the bottom right side of the screen.</p>
+        </div>
+
+        <div class="section">
+            <h2 id="access-file">Accessing files</h2>
+            <img src="/assets/access-file.png"/>
+            <p>Files can be downloaded by left-clicking on the associated file link within the message.</p>
+        </div>
+
+        <div class="section">
+            <h2 id="access-text">Accessing text</h2>
+            <img src="/assets/access-text.png"/>
+            <p>Text can be copied by left-clicking the text within the message. It will be automatically copied to your clipboard.</p>
+        </div>
+    </main>
+
+    <div id="slide-menu">
+        <button id="close-menu" class="custom-button">
+            <img src="/assets/exitIcon.svg" alt="Close Menu"/>
+        </button>
+        <nav id="slide-menu-links">
+            <a href="/quickstart">Quickstart Guide</a>
+            <a href="/overview">Project Overview</a>
+            <a href="/v1">Check out Copy/Paste v1</a>
+            <a href="https://github.com/RCornidez" target="_blank">Created By Rodrigo Cornidez</a>
+            <a href="mailto:cornidez04@gmail.com">Contact</a>
+        </nav>
+    </div>
+
+    <script type="module" src="/quickstart.js"></script>
+
+</body>
+</html>

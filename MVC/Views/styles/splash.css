@@ -1,0 +1,316 @@
+/* General Styles */
+* {
+    box-sizing: border-box;
+
+    font-family: "Inter", sans-serif;
+    font-optical-sizing: auto;
+    font-weight: 400;
+    font-style: normal;
+    font-variation-settings: "slnt" 0;
+}
+
+::-webkit-scrollbar {
+    width: 0px;
+}
+
+html, body {
+    margin: 0;
+    height: 100%;
+}
+
+body {
+    background-color: #333333;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+main {
+    height: 100%;
+    width: 100%;
+    max-width: 500px;
+    background-color: #FAFAFA;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    overflow-y: scroll;
+  }
+
+/* Navigation Styles */
+
+
+nav {
+    position: relative;
+    height: 70px;
+    width: 100%;
+}
+
+
+.custom-button {
+    position: absolute;
+    padding: 0;
+    width: 40px;
+    height: 40px;
+    cursor: pointer;
+    border: none;
+    background: none;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+#hamburger {
+    right: 15px;
+    top: 15px;
+}
+
+
+/* Logo and Hero statement styles */
+
+
+#logo {
+    margin-top: 70px;
+    height: 115px;
+}
+
+@media (min-height: 801px) {
+    #logo {
+        margin-top: 0;
+    }
+}
+
+#hero-phrase {
+    max-width: 310px;
+    font-size: 18px;
+    text-align: center;
+}
+
+#accent {
+    color: #FFA500;
+    text-decoration: underline;
+}
+
+/* Session Button Styles */
+
+#session-buttons {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    width: 100%;
+    gap: 10px;
+    margin: 10px 0px 25px 0px;
+}
+
+#create-session {
+    font-size: 16px;
+    height: 40px;
+    border-radius: 8px;
+    background-color: #FFA500;
+    color: #FAFAFA;
+    border: solid 1px #333333;
+    cursor: pointer;
+    margin: 0px 1px;
+}
+
+
+#join-session {
+    width: 160px;
+    height: 40px;
+    display: flex;
+    flex-direction: row;
+    border-radius: 8px;
+    margin: 0px 1px;
+}
+
+#session-input {
+
+    font-size: 16px;
+    width: 100px;
+    text-align: center;
+    border-radius: 8px 0px 0px 8px;
+    border: solid 1px #333333;
+    border-right: 0px;
+    outline: none;
+}
+
+#session-input:focus {
+    border-color: #FFA500;
+}
+
+#session-input:user-valid {
+    border-color: #32CD32;
+}
+
+#session-input:user-invalid {
+    border-color: #f44336;
+}
+
+#join-session button {
+    width: 100%;
+    
+    border-radius: 0px 8px 8px 0px;
+    border: solid 1px #333333;
+    cursor: pointer;
+    background-color: #FFA500;
+    color: #FAFAFA;
+    font-size: 16px;
+}
+
+
+/* Highlight Styles */
+
+#highlights {
+    max-height: 450px;
+    width: 100%;
+    background-color: #6183FF;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+#highlights-title {
+    width: 347px;
+    text-align: left;
+    font-size: 22px;
+    font-weight: 600;
+    color: #FAFAFA;
+
+}
+
+.highlight {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 347px;
+    min-height: 72px;
+    background-color: #FAFAFA;
+    border-radius: 8px;
+    margin-bottom: 5px;
+    overflow: hidden;
+}
+
+.highlight-title {
+    height: 72px;
+    width: 100%;
+    display: flex;
+    font-size: 18px;
+    justify-content: space-between;
+    align-items: center;
+    cursor: pointer;
+    padding: 0px 15px;
+}
+
+.highlight-description {
+    height: 0;
+    padding: 0 15px;
+    font-size: 16px;
+    color: #333;
+    overflow: hidden;
+    transition: height 0.3s ease, padding 0.3s ease;
+    padding: 0px 30px;
+}
+
+.highlight-description p {
+    margin-top: 0px;
+}
+
+
+.highlight-icon {
+    width: 40px;
+}
+
+.arrow {
+    width: 29px;
+    transform: rotate(90deg);
+    transition: transform 0.3s ease;
+}
+
+.highlight.open .arrow {
+    transform: rotate(0deg);
+}
+
+.highlight.open .highlight-description {
+    height: auto;
+}
+
+
+.highlight-title p {
+    text-align: center;
+}
+
+#project-details {
+    margin-top: 15px;
+    margin-bottom: 30px;
+    font-size: 18px;
+    font-weight: 500;
+    color: #FAFAFA;
+}
+
+
+/* Footer Styles  */
+
+#footer {
+    margin-top: 20px;
+    font-size: 14px;
+    color: #333333;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    align-items: center;
+}
+
+#privacy-links {
+    display: flex;
+    gap: 10px;
+    text-decoration: none;
+}
+
+/* Styles for the slide-down menu */
+#slide-menu {
+    position: fixed;
+    top: -100%;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 100%;
+    max-width: 500px;
+    height: 100%;
+    background-color: #FAFAFA;
+    transition: top 0.3s ease;
+    z-index: 1000;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    padding: 70px;
+}
+
+#slide-menu.open {
+    top: 0;
+}
+
+#close-menu {
+    right: 15px;
+    top: 15px;
+    align-self: flex-start;
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 0;
+    font-size: 20px;
+}
+
+#slide-menu-links {
+    margin-top: 20px;
+    display: flex;
+    flex-direction: column;
+}
+
+#slide-menu-links a {
+    color: #333;
+    text-decoration: none;
+    padding: 10px 0;
+    font-size: 18px;
+}
+
+#slide-menu-links a:hover {
+    color: #FFA500; 
+}

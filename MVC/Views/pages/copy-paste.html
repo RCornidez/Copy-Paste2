@@ -13,20 +13,23 @@
 </head>
 <body>
     
-    <nav id="nav">
-        <p id="session-id"></p>
-        <p id="connection-status">Connecting...</p>
-        <button id="leave-button">Exit Session ➡️</button>
-    </nav>
-    
-    <main id="container"></main>
-    
-    <div id="chat">
-        <button id="attach">📁</button>
-        <textarea id="textInput" placeholder="Type your message..."></textarea>
-        <button id="upload">🚀</button>
-    </div>
+    <main id="container">
+        <nav>
+            <p id="session-id">Space ID: 123456</p>
+            <Button id="exit"><img src="/assets/exitIcon.svg"/></Button>
+        </nav>
+
+        <div id="chat">
+
+            <Button id="attach"><img src="/assets/attachIcon.svg"/></Button>
+                
+            <textarea type="text" id="message" placeholder="You're Connected, type here..."></textarea>
+
+            <Button id="send"><img src="/assets/sendIcon.svg"/></Button>
+        </div>
+    </main>
 
     <script type="module" src="/copy-paste.js"></script>
+    
 </body>
 </html>

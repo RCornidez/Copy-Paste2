@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg id="Layer_2" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32.2 32.23">
+  <defs>
+    <style>
+      .cls-1 {
+        fill: none;
+        stroke: #231f20;
+        stroke-linecap: round;
+        stroke-miterlimit: 10;
+        stroke-width: 2px;
+      }
+    </style>
+  </defs>
+  <g id="Layer_1-2" data-name="Layer_1">
+    <g id="Chains">
+      <path class="cls-1" d="M15.78,20.31c.46,1.77-.01,3.74-1.4,5.13l-4.22,4.22c-2.09,2.1-5.48,2.11-7.58.03s-2.11-5.48-.03-7.58l4.24-4.24c1.39-1.39,3.35-1.86,5.13-1.4"/>
+      <line class="cls-1" x1="10.82" y1="21.4" x2="20.89" y2="11.33"/>
+      <path class="cls-1" d="M16.42,11.92c-.45-1.77.01-3.74,1.4-5.13l4.22-4.21c2.09-2.1,5.48-2.11,7.58-.03,2.1,2.09,2.11,5.48.03,7.58l-4.24,4.24c-1.39,1.39-3.35,1.86-5.13,1.4"/>
+    </g>
+  </g>
+</svg>

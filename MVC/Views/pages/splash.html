@@ -4,130 +4,92 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Copy/Paste 📋</title>
+    <link rel="stylesheet" href="/splash.css">
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap" rel="stylesheet">
 
-    <style>
-        * {
-            font-family: "Roboto", sans-serif;
-            font-weight: 400;
-            font-style: normal;
-        }
-
-        html {
-            height: 100%;
-            width: 100%;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-        }
-
-        body {
-            margin: 0;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            transform: translateY(-50%);
-        }
-
-        #logo {
-            font-size: 48px;
-            font-weight: 600;
-        }
-
-        #button-wrapper {
-            display: flex;
-            flex-direction: row;
-            gap: 10px;
-        }
-
-        .pill-button {
-            font-weight: 400;
-            font-size: 18px;
-            padding: 10px 20px;
-            border-radius: 50px; /* Makes the button pill-shaped */
-            background-color: orange;
-            color: white;
-            border: 2px solid black; /* Adds a black border */
-            cursor: pointer;
-            text-align: center;
-            white-space: nowrap; /* Prevents text wrapping */
-        }
-
-        #join-session {
-            display: flex;
-            flex-direction: row;
-            align-items: center;
-            border-radius: 50px; /* Makes the input and button pill-shaped */
-            overflow: hidden; /* Ensures child elements fit within the pill */
-            border: 0px solid black; /* Adds a black border around the entire form */
-        }
-
-        #session-input {
-            font-size: 18px;
-            max-width: 90px;
-            padding: 10px 15px;
-            border-radius: 50px 0 0 50px; /* Rounded corners on the left */
-            border: 2px solid black; /* Adds a black border */
-            border-right: none;
-            background-color: white; /* Background color of the input */
-            color: black; /* Text color */
-            outline: none;
-        }
-
-        #session-input:focus {
-            box-shadow: none;
-            font-size: 18px;
-        }
-
-        #join-session button {
-            font-size: 18px;
-            padding: 10px 15px;
-            border-radius: 0 50px 50px 0; /* Rounded corners on the right */
-            background-color: orange;
-            border: 2px solid black; /* Adds a black border */
-            color: white;
-            cursor: pointer;
-            text-align: center;
-        }
-
-    </style>
 </head>
 <body>
-    <h1 id="logo">Copy/Paste 📋</h1>
-    <div id="button-wrapper">
-        <button id="create-session" class="pill-button">New Session</button>
-        <form id="join-session">
-            <input type="text" id="session-input" placeholder="Session ID" required>
-            <button type="submit">Join</button>
-        </form>
+   <main>
+        <nav>
+            <button id="hamburger" class="custom-button">
+                <img src="/assets/hamburgerMenuIcon.svg"/>
+            </button>
+        </nav>
+        
+        <img id="logo" src="/assets/logo.svg"/>
+        
+        <p id="hero-phrase">Enter a Space ID and <span id="accent">instantly</span> share files and collaborate in a secure, temporary chat-like environment.</p>
+        
+        <div id="session-buttons">
+            <button id="create-session">Create a Space</button>
+            <form id="join-session">
+                <input type="text" id="session-input" placeholder="Space ID" required maxlength="6" minlength="6">
+                <button type="submit">Join</button>
+            </form>
+        </div>
+        
+        <div id="highlights">
+            <p id="highlights-title">New and Improved!</p>
+            <div class="highlight">
+                <div class="highlight-title">
+                    <img class="highlight-icon" src="/assets/watchIcon.svg"/>
+                    <p>Faster Connections</p>
+                    <img class="arrow" src="/assets/arrowIcon.svg"/>
+                </div>
+                <div class="highlight-description">
+                    <p>Connect in seconds with our optimized technology. Start sharing files almost instantly.</p>
+                </div>
+            </div>
+            <div class="highlight">
+                <div class="highlight-title">
+                    <img class="highlight-icon" src="/assets/filesIcon.svg"/>
+                    <p>Multifile Messages</p>
+                    <img class="arrow" src="/assets/arrowIcon.svg"/>
+                </div>
+                <div class="highlight-description">
+                    <p>Easily share multiple files in one message</p>
+                </div>
+            </div>
+            <div class="highlight">
+                <div class="highlight-title">
+                    <img class="highlight-icon" src="/assets/chainIcon.svg"/>
+                    <p>Easy-to-Type Space IDs</p>
+                    <img class="arrow" src="/assets/arrowIcon.svg"/>
+                </div>
+                <div class="highlight-description">
+                    <p>Simplified Space IDs make joining sessions a breeze. Quick to type and easy to remember.</p>
+                </div>
+            </div>
+            <a id="project-details" href="/overview">See full project details</a>
+        </div>
+        
+
+
+        <div id="footer">
+            <div id="privacy-links">
+                <a href="/privacy-policy">Privacy Policy</a>
+            </div>
+
+            <p>© 2024 Rodrigo Cornidez All Rights Reserved.</p>
+        </div>
+    </main>
+
+    <div id="slide-menu">
+        <button id="close-menu" class="custom-button">
+            <img src="/assets/exitIcon.svg" alt="Close Menu"/>
+        </button>
+        <nav id="slide-menu-links">
+            <a href="/quickstart">Quickstart Guide</a>
+            <a href="/overview">Project Overview</a>
+            <a href="/v1">Check out Copy/Paste v1</a>
+            <a href="https://github.com/RCornidez" target="_blank">Created By Rodrigo Cornidez</a>
+            <a href="mailto:cornidez04@gmail.com">Contact</a>
+        </nav>
     </div>
 
-    <script>
-        // Event listener for the "Create a Session" button
-        document.getElementById('create-session').addEventListener('click', function() {
-            // Use URLSearchParams to build the URL without hardcoding
-            const url = new URL('/copy-paste', window.location.origin);
-            window.location.href = url; // Redirects to the 'copy-paste' route
-        });
-
-        // Event listener for the form submission
-        document.getElementById('join-session').addEventListener('submit', function(event) {
-            event.preventDefault(); // Prevent the form from submitting in the default manner
-
-            const sessionId = document.getElementById('session-input').value.trim(); // Get the session ID from input
-
-            // Use URLSearchParams to build the URL with the session ID
-            const url = new URL('/copy-paste', window.location.origin);
-            const params = new URLSearchParams({ session: sessionId });
-            url.search = params.toString(); // Add the session parameter to the URL
-
-            window.location.href = url; // Redirect to the 'copy-paste' route with the session ID
-        });
-    </script>
+    <script type="module" src="/splash.js"></script>
 </body>
 </html>

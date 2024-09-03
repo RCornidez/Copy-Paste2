@@ -1,0 +1,144 @@
+/* General Styles */
+
+
+* {
+    box-sizing: border-box;
+
+    font-family: "Inter", sans-serif;
+    font-optical-sizing: auto;
+    font-weight: 400;
+    font-style: normal;
+    font-variation-settings: "slnt" 0;
+}
+
+::-webkit-scrollbar {
+    width: 0px;
+}
+
+ul {
+    list-style: none;
+    padding: 0px;
+    margin-top: 0px;
+    padding-bottom: 16px;
+    width: 100%;
+    text-align: center;
+}
+
+html, body {
+    margin: 0;
+    height: 100%;
+}
+
+body {
+    background-color: #333333;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+main {
+    height: 100%;
+    width: 100%;
+    max-width: 500px;
+    background-color: #FAFAFA;
+    color: #333333;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    overflow-y: scroll;
+    padding: 0px 15px;
+}
+
+#title {
+    margin-top: 70px;
+    font-weight: 800;
+    width: 100%;
+    text-align: center;
+}
+
+
+/* Navigation Styles */
+
+
+nav {
+    position: relative;
+    height: 70px;
+    width: 100%;
+}
+
+
+.custom-button {
+    position: absolute;
+    padding: 0;
+    width: 40px;
+    height: 40px;;
+    cursor: pointer;
+    border: none;
+    background: none;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+#arrow {
+    left: 0px;
+    top: 15px;
+    width: 29px;
+    transform: rotate(90deg)
+}
+
+#hamburger {
+    right: 0px;
+    top: 15px;
+}
+
+/* Styles for the slide-down menu */
+#slide-menu {
+    position: fixed;
+    top: -100%;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 100%;
+    max-width: 500px;
+    height: 100%;
+    background-color: #FAFAFA;
+    transition: top 0.3s ease;
+    z-index: 1000;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    padding: 70px;
+}
+
+#slide-menu.open {
+    top: 0;
+}
+
+#close-menu {
+    right: 15px;
+    top: 15px;
+    align-self: flex-start;
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 0;
+    font-size: 20px;
+}
+
+#slide-menu-links {
+    margin-top: 20px;
+    display: flex;
+    flex-direction: column;
+}
+
+#slide-menu-links a {
+    color: #333;
+    text-decoration: none;
+    padding: 10px 0;
+    font-size: 18px;
+}
+
+#slide-menu-links a:hover {
+    color: #FFA500; 
+}
+

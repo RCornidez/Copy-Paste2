@@ -58,12 +58,21 @@ export class UIHandler {
     }
     
 
-    createFileLink(file) {
+    createFileLink(file, type) {
+        const messageWrapper = document.createElement('div');
+        messageWrapper.className = 'message-wrapper';
+
+        const message = document.createElement('div');
+        message.className = 'message';
+    
+        // Position the message
+        messageWrapper.style.alignItems = type === 'incoming' ? 'flex-start' : 'flex-end';
+
         const fileSection = document.createElement('div');
         fileSection.className = 'message';
 
         // Create a binary blob and URL
-        let blob = new Blob([file.data], { type: file.type });
+        let blob = new Blob(file.chunks, { type: file.type });
         let url = URL.createObjectURL(blob);
     
         // Determine icon based on file type
@@ -96,8 +105,11 @@ export class UIHandler {
     
         // Append to the file section
         fileSection.appendChild(anchor);
+        messageWrapper.appendChild(fileSection);
 
-        return fileSection;
+        // Append to chat container
+        const chatContainer = document.getElementById('container');
+        chatContainer.appendChild(messageWrapper);
     }
 
     formatFileSize(size) {

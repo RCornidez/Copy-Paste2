@@ -22,6 +22,12 @@ body {
     padding: 20px;
 }
 
+#banner {
+    background-color: #D1ECF1;
+    padding: 10px;
+    border-radius: 8px;
+}
+
 #callInput {
     padding: 0px 0.4rem;
     margin-bottom: 0.3rem;

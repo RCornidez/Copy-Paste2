@@ -35,7 +35,7 @@ let receivedFileName = '';
 let receiveBuffer = [];
 let receivedSize = 0;
 
-let url = `http://127.0.0.1:4000/` // This will be set to the Public IP or domain name + port where your application is hosted
+let url = `http://127.0.0.1:4000/v1/` // This will be set to the Public IP or domain name + port where your application is hosted
 
 
 

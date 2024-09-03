@@ -63,10 +63,14 @@ class FileMessage {
             // Send the chunk with the message ID
             dataChannel.send(chunkWithId);
 
+            console.log(`Sent chunk for fileId ${this.id}, chunk size: ${chunk.byteLength}`);
+
             this.offset += chunk.byteLength;
 
             if (this.offset < this.file.size) {
                 this._readSlice(reader);
+            } else {
+                console.log(`Finished sending fileId ${this.id}`);
             }
         };
 

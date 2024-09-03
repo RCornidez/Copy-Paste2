@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg id="Layer_2" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 33.98 36.49">
+  <defs>
+    <style>
+      .cls-1 {
+        fill: none;
+        stroke-width: 2px;
+      }
+
+      .cls-1, .cls-2 {
+        stroke: #231f20;
+        stroke-miterlimit: 10;
+      }
+
+      .cls-2 {
+        fill: #231f20;
+      }
+    </style>
+  </defs>
+  <g id="Layer_1-2" data-name="Layer_1">
+    <g id="Stop_watch">
+      <circle class="cls-1" cx="16.94" cy="19.54" r="15.94"/>
+      <line class="cls-1" x1="16.94" y1="23.33" x2="16.94" y2="7.82"/>
+      <circle class="cls-1" cx="16.94" cy="19.54" r="1.5"/>
+      <line class="cls-1" x1="16.94" y1="3.6" x2="16.94" y2=".23"/>
+      <polygon class="cls-2" points="29.01 4.82 29.01 2.14 30.45 .71 33.28 3.54 31.9 4.91 29.01 4.82"/>
+    </g>
+  </g>
+</svg>

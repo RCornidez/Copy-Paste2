@@ -22,7 +22,7 @@ appId: process.env.APPID
 const app = initializeApp(firebaseConfig);
 const firestore = getFirestore(app);
 
-router.get('/session-document', async (req, res) => {
+router.get('/v1/session-document', async (req, res) => {
     const sessionId = req.headers['x-session-id'];
 
     const callDoc = doc(firestore, 'calls', sessionId);
@@ -38,7 +38,7 @@ router.get('/session-document', async (req, res) => {
         });
 })
 
-router.get('/create-session', async (req, res) => {
+router.get('/v1/create-session', async (req, res) => {
         // Create a new session document and setup the sub-collections
         const callDoc = doc(collection(firestore, 'calls'));
         await setDoc(callDoc, {})
@@ -47,7 +47,7 @@ router.get('/create-session', async (req, res) => {
 
 })
 
-router.post('/offer', async (req, res) => {
+router.post('/v1/offer', async (req, res) => {
         const sessionId = req.headers['x-session-id'];
         const callDoc = doc(firestore, 'calls', sessionId);
         
@@ -56,7 +56,7 @@ router.post('/offer', async (req, res) => {
             .catch(() => {res.sendStatus(500)})
 })
 
-router.post('/answer', async (req, res) => {
+router.post('/v1/answer', async (req, res) => {
     const sessionId = req.headers['x-session-id'];
     const callDoc = doc(firestore, 'calls', sessionId);
     
@@ -65,7 +65,7 @@ router.post('/answer', async (req, res) => {
         .catch(() => {res.sendStatus(500)})
 })
 
-router.post('/offerCandidates', async (req, res) => {
+router.post('/v1/offerCandidates', async (req, res) => {
 
     const sessionId = req.headers['x-session-id'];
 
@@ -83,7 +83,7 @@ router.post('/offerCandidates', async (req, res) => {
         });
 })
 
-router.get('/offerCandidates', async (req, res) => {
+router.get('/v1/offerCandidates', async (req, res) => {
     const sessionId = req.headers['x-session-id'];
 
     const callDoc = doc(firestore, 'calls', sessionId);
@@ -102,7 +102,7 @@ router.get('/offerCandidates', async (req, res) => {
     }
 });
 
-router.post('/answerCandidates', async (req, res) => {
+router.post('/v1/answerCandidates', async (req, res) => {
 
     const sessionId = req.headers['x-session-id'];
 
@@ -120,7 +120,7 @@ router.post('/answerCandidates', async (req, res) => {
         });
 })
 
-router.get('/answerCandidates', async (req, res) => {
+router.get('/v1/answerCandidates', async (req, res) => {
     const sessionId = req.headers['x-session-id'];
 
     const callDoc = doc(firestore, 'calls', sessionId);
@@ -139,7 +139,7 @@ router.get('/answerCandidates', async (req, res) => {
     }
 });
 
-router.delete('/delete-document', async (req, res) => {
+router.delete('/v1/delete-document', async (req, res) => {
     const sessionId = req.headers['x-session-id'];
     const callDoc = doc(firestore, 'calls', sessionId);
     await deleteDoc(callDoc)

@@ -3,13 +3,17 @@ import http from 'http';
 import path from 'path';
 import { fileURLToPath } from 'url';
 import 'dotenv/config'
+import cors from "cors";
 
 import AuthService from './custom_modules/Auth.js';
 import JWT from './custom_modules/JWT.js';
 import WebSocketServer from './custom_modules/WebSocketServer.js';
 import RateLimiter from './custom_modules/RateLimit.js';
 
-import { getSplashPage, getCopyPastePage, getLoginPage } from './MVC/Controllers/webpageController.js';
+// v1 Endpoints
+import { router as firestore } from "./custom_modules/v1/firestore.js";
+
+import { getSplashPage, getCopyPastePage, getQuickstartPage, getLoginPage, getOverviewPage, getv1Page, getPrivacyPage } from './MVC/Controllers/webpageController.js';
 import { authenticateLogin } from './MVC/Controllers/authController.js';
 import { generateGetJWT, generatePostJWT } from './MVC/Controllers/jwtController.js';
 import { upgradeWebSocket } from './MVC/Controllers/webSocketController.js';
@@ -18,11 +22,16 @@ import backupDatabase from './utilities/backupDatabase.js';
 
 const app = express();
 app.use(express.json());
+app.use(cors({ origin: "*" }));
 
 // Serve static files
 const __filename = fileURLToPath(import.meta.url); // Convert the current module's URL to a file path
 const __dirname = path.dirname(__filename); // Get the directory name of the current module
 app.use(express.static(path.join(__dirname, 'public','v2'))); // used to serve static file (HTML, CSS, JS)
+app.use(express.static(path.join(__dirname, 'public','v1'))); // used to serve static file (HTML, CSS, JS)
+
+// v1 Firestore routes
+app.use(firestore)
 
 // Setup Rate Limiting
 const rateLimiter = new RateLimiter({
@@ -40,10 +49,12 @@ const jwt = new JWT();
 const webSocketServer = new WebSocketServer(server, jwt);
 const wss = webSocketServer.wss;
 
-
 // Routes
 app.get('/', getSplashPage);
 app.get('/copy-paste', getCopyPastePage);
+app.get('/quickstart', getQuickstartPage);
+app.get('/overview', getOverviewPage);
+app.get('/privacy-policy', getPrivacyPage);
 app.get('/login', getLoginPage);
 app.get('/dashboard', AuthService.authenticateToken, (req, res) => {
     try {
@@ -57,6 +68,9 @@ app.post('/api/auth', authenticateLogin);
 app.get('/api/secure', (req, res) => generateGetJWT(req, res, jwt));
 app.post('/api/secure', (req, res) => generatePostJWT(req, res, jwt));
 app.get('/api/wss', (req, res) => upgradeWebSocket(req, res, wss));
+
+//Copy/Paste v1 Routes
+app.get('/v1', getv1Page);
 
 // Start the server
 const PORT = process.env.PORT;

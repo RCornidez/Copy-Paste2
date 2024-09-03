@@ -36,7 +36,6 @@ export default class WebRTCClient {
 
     async createOffer() {
         try {
-            // Create a data channel
             this.dataChannel = this.pc.createDataChannel('chat');
             this.setupDataChannel();
             console.log('Data channel created');

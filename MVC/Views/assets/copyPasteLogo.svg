@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg id="Layer_2" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 193.36 86.63">
+  <defs>
+    <style>
+      .cls-1 {
+        fill: none;
+        stroke: #231f20;
+        stroke-miterlimit: 10;
+        stroke-width: 4px;
+      }
+
+      .cls-2 {
+        letter-spacing: .02em;
+      }
+
+      .cls-2, .cls-3 {
+        fill: #231f20;
+        font-family: Roboto-Medium, Roboto;
+        font-size: 41px;
+        font-weight: 500;
+      }
+
+      .cls-4 {
+        letter-spacing: -.07em;
+      }
+
+      .cls-5 {
+        letter-spacing: .02em;
+      }
+    </style>
+  </defs>
+  <g id="Layer_1-2" data-name="Layer_1">
+    <g id="Logo">
+      <g id="Words">
+        <text class="cls-2" transform="translate(23.08 35.07)"><tspan x="0" y="0">COPY</tspan></text>
+        <text class="cls-3" transform="translate(7.03 75.52)"><tspan class="cls-4" x="0" y="0">P</tspan><tspan class="cls-5" x="23.38" y="0">ASTE</tspan></text>
+      </g>
+      <g id="Icon">
+        <rect class="cls-1" x="149.03" y="19.01" width="33.25" height="54.23" rx="3.02" ry="3.02"/>
+        <path class="cls-1" d="M158.11,14.37v-3.67c0-1.67,1.35-3.02,3.02-3.02h27.2c1.67,0,3.02,1.35,3.02,3.02v48.18c0,1.67-1.35,3.02-3.02,3.02h-1.09"/>
+      </g>
+    </g>
+  </g>
+</svg>
