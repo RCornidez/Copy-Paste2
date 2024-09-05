@@ -145,7 +145,7 @@ Assign the following values within the .env file. You can omit the Firestore det
 
 ```
 
-# Copy/Paste v1 Variables
+# Copy/Paste v2 Variables
 AUTH_SECRET_KEY="random generated string"
 DATABASE="./database.db"
 IP=127.0.0.1
