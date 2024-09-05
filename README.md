@@ -32,7 +32,7 @@
 ## How to run locally:
 
 <ol>
-    <li>Download <a href="https://github.com/RCornidez/copy-paste">Github</a> repository.</li>
+    <li>Download <a href="https://github.com/RCornidez/Copy-Paste2">Github</a> repository.</li>
     <li>Run: `npm install` within the root of directory to install dependencies.</li>
     <li>Create a <a href="#env">.env file per the notes below.</a></li>
     <li>Run: `npm start` to run the demo</li>
